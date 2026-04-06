@@ -4,7 +4,7 @@ import termios
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Twist
-from std_msgs.msg import String
+from std_msgs.msg import String, Float64
 
 LINEAR_SPEED = 0.5
 ANGULAR_SPEED = 2.0
@@ -30,7 +30,7 @@ class TeleopNode(Node):
     def __init__(self):
         super().__init__('teleop_node')
         self._cmd_vel_pub = self.create_publisher(Twist, 'cmd_vel', 1)
-        self._grip_pub = self.create_publisher(Twist, 'gripper_vel', 1)
+        self._grip_pub = self.create_publisher(Float64, 'cmd_grip', 1)
 
         self._grip_closed = False
 
@@ -41,8 +41,8 @@ class TeleopNode(Node):
         self._cmd_vel_pub.publish(msg)
 
     def publish_grip(self):
-        msg = Twist()
-        msg.linear.x = 0.03 if self._grip_closed else 0.0
+        msg = Float64()
+        msg.data = 0.03 if self._grip_closed else 0.0
         self._grip_pub.publish(msg)
 
 
